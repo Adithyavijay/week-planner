@@ -44,4 +44,25 @@ export const parseTime = (timeStr: string): Date => {
     const start = parseTime(slot.startTime);
     const end = parseTime(slot.endTime);
     return start < end;
-  };
+  }; 
+  export function convert24to12(time24: string): string {
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${hour12}:${minutes} ${period}`;
+  }
+  
+  export function convert12to24(time12: string): string {
+    const [time, period] = time12.split(' ');
+    const [hours, minutes] = time.split(':');
+    let hour = parseInt(hours);
+    
+    if (period === 'PM' && hour !== 12) {
+      hour += 12;
+    } else if (period === 'AM' && hour === 12) {
+      hour = 0;
+    }
+    
+    return `${hour.toString().padStart(2, '0')}:${minutes}`;
+  }
