@@ -9,15 +9,16 @@ const defaultAvailability: WeeklyAvailability = DAYS_OF_WEEK.reduce((acc, day) =
     enabled: true,
     timeSlots: [{ ...DEFAULT_TIME_SLOT }]
   }
-}), {} as WeeklyAvailability);
+}), {} as WeeklyAvailability); 
+interface AvailabilityPageProps{
+  params : Promise<{
+      userId: string
+  }>
+}
 
-export default async function AvailabilityPage({
-  params: { userId }
-}: {
-  params: { userId: string }
-}) { 
+export default async function AvailabilityPage(props : AvailabilityPageProps) { 
 
-  
+  const { userId } = await props.params ;
   const availability = await getCachedAvailability(userId) || defaultAvailability;
 
   return (
