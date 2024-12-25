@@ -7,6 +7,7 @@ import { hasOverlap, isValidTimeSlot } from '@/lib/utils';
 import { saveAvailability } from '@/actions';
 import { DaySchedule } from '@/components/availability/DaySchedule';
 import { Button } from '@/components/ui/Button';
+import { WeekdaySelector } from '@/components/availability/WeekdaySelector';
 
 export default function AvailabilityForm({
   userId,
@@ -87,17 +88,28 @@ export default function AvailabilityForm({
 
   const isValid = Object.values(availability).some(day => 
     day.enabled && day.timeSlots.length > 0
-  );
+  ); 
+  const handleDayToggle = (day: keyof WeeklyAvailability, enabled: boolean) => {
+    updateDaySchedule(day, {
+      ...availability[day],
+      enabled
+    });
+  };
 
-  return (
+  return ( 
+    <>
+     <WeekdaySelector 
+        availability={availability}
+        onChange={handleDayToggle}
+      />
     <form 
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
       }}
-      className="bg-white rounded-lg shadow-sm border border-gray-200"
+      className="bg-white rounded-lg shadow-sm border border-gray-200 p-5"
     >
-      <div className="divide-y divide-gray-200">
+      
         {DAYS_OF_WEEK.map(day => (
           <DaySchedule
             key={day}
@@ -107,7 +119,7 @@ export default function AvailabilityForm({
             errors={validationErrors[day]}
           />
         ))}
-      </div>
+     
 
       {error && (
         <div className="px-6 py-4 border-t border-gray-200 bg-red-50">
@@ -125,5 +137,6 @@ export default function AvailabilityForm({
         </Button>
       </div>
     </form>
+    </>
   );
 }
